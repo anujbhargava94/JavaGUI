@@ -2,8 +2,6 @@ package com.ub.tree.ui;
 
 import java.util.Stack;
 
-import com.ub.tree.AbsTree;
-
 //**************** The TreeMemento class *************************
 //(to be coded by you)
 

@@ -1,4 +1,4 @@
-package com.ub.tree;
+package com.ub.tree.ui;
 
 //*********************************************************
 //Binary Search Tree (of integers) with Duplicates in Java

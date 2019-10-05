@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
 
-import com.ub.tree.AbsTree;
-
 //**************** The OutputPanel class *************************
 //(no changes required)
 

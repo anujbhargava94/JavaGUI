@@ -25,10 +25,6 @@ import java.util.Stack;
 
 import javax.swing.*;
 
-import com.ub.tree.AbsTree;
-import com.ub.tree.DupTree;
-import com.ub.tree.Tree;
-
 class TreeGUIDriver {
 	public static void main(String[] x) {
 		new TreeGUI();
