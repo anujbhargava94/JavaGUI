@@ -11,10 +11,10 @@ public abstract class AbsTree implements Cloneable {
 		right = null;
 	}
 
-	public AbsTree clone() {
+	public AbsTree clone() throws CloneNotSupportedException {
 
 		// fill in code here
-
+		return (AbsTree) super.clone();
 	}
 
 	void print() {
