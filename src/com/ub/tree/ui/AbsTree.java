@@ -12,9 +12,18 @@ public abstract class AbsTree implements Cloneable {
 	}
 
 	public AbsTree clone() throws CloneNotSupportedException {
-
 		// fill in code here
-		return (AbsTree) super.clone();
+		AbsTree tr = null;
+		try {
+			tr = (AbsTree) super.clone();
+		} catch (Exception e) {
+		}
+		if (left != null)
+			tr.left = left.clone();
+		if (right != null)
+			tr.right = right.clone();
+		System.out.println("Cloning: "+tr.value+tr.left+tr.right);
+		return tr;
 	}
 
 	void print() {

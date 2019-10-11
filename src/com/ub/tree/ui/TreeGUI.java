@@ -226,7 +226,6 @@ public class TreeGUI extends JFrame {
 				}
 				tm.set_state(tree);
 				boolean b = tree.delete(n); // note whether delete changed state of tree
-
 				if (b) {
 					outputPanel.drawTree(tree);
 				} else // delete will not remove the last value, hence must check this:
@@ -244,9 +243,11 @@ public class TreeGUI extends JFrame {
 		undoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				// missing code to be filled in by you
-				if (tm.is_empty()) {
+				if (tm.is_empty() && tree == null) {
+					JOptionPane.showMessageDialog(null, "Cannot perform undo on empty tree");
+				}
+				else if (tm.is_empty()) {
 					tree = null;
 					outputPanel.clearPanel();
 				} else {
