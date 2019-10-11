@@ -161,7 +161,7 @@ public class TreeGUI extends JFrame {
 				input_elem_text2.setText("");
 				min_text.setText("");
 				max_text.setText("");
-				tm.clear();
+				tm.clear();							//Clearing the memento stack if clear is done
 				outputPanel.clearPanel();
 			}
 		});
@@ -193,7 +193,7 @@ public class TreeGUI extends JFrame {
 								tree = new DupTree(Integer.parseInt(s));
 							b = true;
 						} else {
-							tm.set_state(tree);
+							tm.set_state(tree);						//pushing the state of tree before the insert is performed
 							b = tree.insert(Integer.parseInt(s));
 						}
 					} catch (NumberFormatException e2) {
@@ -223,7 +223,7 @@ public class TreeGUI extends JFrame {
 					return;
 				}
 
-				tm.set_state(tree);
+				tm.set_state(tree);			//Pushing the state of tree before the delete is performed
 				boolean b = tree.delete(n); // note whether delete changed state of tree
 
 				if (b) {
@@ -244,12 +244,15 @@ public class TreeGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// missing code to be filled in by you
+				/*
+				 * If both the tree is null and memento stack is empty means no more undo operation can be prerformed
+				 */
 				if (tm.is_empty() && tree == null) {
 					JOptionPane.showMessageDialog(null, "Cannot perform undo on empty tree");
-				} else if (tm.is_empty()) {
+				} else if (tm.is_empty()) {       	//We have reached the to starting step of even on tree. Hence clearing up the tree
 					tree = null;
 					outputPanel.clearPanel();
-				} else {
+				} else {							//Getting the state saved in memento which is the previous state and displaying on the UI
 					tree = tm.get_state();
 					outputPanel.drawTree(tree);
 				}
@@ -332,6 +335,9 @@ class OutputPanel extends Panel {
 class TreeMemento {
 	private Stack<AbsTree> state = new Stack<AbsTree>();
 
+	/*
+	 * Before any event is performed on a tree. The cloned previous state of the tree is pushed in the tree
+	 */
 	public void set_state(AbsTree t) {
 // fill in code here
 		try {
@@ -342,6 +348,10 @@ class TreeMemento {
 		}
 	}
 
+	
+	/*
+	 * When a state is fetched the top of the stack is popped. If the state is empty null is returned.
+	 */
 	public AbsTree get_state() {
 // fill in code here
 		AbsTree treeState = state.isEmpty() ? null : state.pop();
@@ -371,6 +381,12 @@ abstract class AbsTree implements Cloneable {
 		right = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 * 
+	 * Objective: To do the deep copy of tree when cloned
+	 */
 	public AbsTree clone() throws CloneNotSupportedException {
 		// fill in code here
 		AbsTree tr = null;
