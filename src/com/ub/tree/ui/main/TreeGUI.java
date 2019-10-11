@@ -1,3 +1,4 @@
+package com.ub.tree.ui.main;
 // ************** Assignment 2 Part 2 **************
 
 // This file has the following classes:
@@ -160,6 +161,7 @@ public class TreeGUI extends JFrame {
 				input_elem_text2.setText("");
 				min_text.setText("");
 				max_text.setText("");
+				tm.clear();
 				outputPanel.clearPanel();
 			}
 		});
@@ -190,8 +192,10 @@ public class TreeGUI extends JFrame {
 							else
 								tree = new DupTree(Integer.parseInt(s));
 							b = true;
-						} else
+						} else {
+							tm.set_state(tree);
 							b = tree.insert(Integer.parseInt(s));
+						}
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "Bad integer: " + s + ". Please re-enter.");
 						return;
@@ -219,6 +223,7 @@ public class TreeGUI extends JFrame {
 					return;
 				}
 
+				tm.set_state(tree);
 				boolean b = tree.delete(n); // note whether delete changed state of tree
 
 				if (b) {
@@ -238,8 +243,17 @@ public class TreeGUI extends JFrame {
 		undoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				// missing code to be filled in by you
+				if (tm.is_empty() && tree == null) {
+					JOptionPane.showMessageDialog(null, "Cannot perform undo on empty tree");
+				} else if (tm.is_empty()) {
+					tree = null;
+					outputPanel.clearPanel();
+				} else {
+					tree = tm.get_state();
+					outputPanel.drawTree(tree);
+				}
+				input_elem_text.selectAll();
 
 			}
 		});
@@ -319,19 +333,30 @@ class TreeMemento {
 	private Stack<AbsTree> state = new Stack<AbsTree>();
 
 	public void set_state(AbsTree t) {
-		// fill in code here
+// fill in code here
+		try {
+			state.push(t.clone());
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public AbsTree get_state() {
-		// fill in code here
+// fill in code here
+		AbsTree treeState = state.isEmpty() ? null : state.pop();
+		return treeState;
 	}
 
 	public void clear() {
-		// fill in code here
+// fill in code here
+		state.clear();
 	}
 
 	boolean is_empty() {
-		// fill in code here
+// fill in code here
+		return state.isEmpty();
+
 	}
 }
 
@@ -346,10 +371,18 @@ abstract class AbsTree implements Cloneable {
 		right = null;
 	}
 
-	public AbsTree clone() {
-
+	public AbsTree clone() throws CloneNotSupportedException {
 		// fill in code here
-
+		AbsTree tr = null;
+		try {
+			tr = (AbsTree) super.clone();
+		} catch (Exception e) {
+		}
+		if (left != null)
+			tr.left = left.clone();
+		if (right != null)
+			tr.right = right.clone();
+		return tr;
 	}
 
 	void print() {
