@@ -16,7 +16,6 @@
 // 4. AbsTree, Tree, and DupTree -- the foundation classes
 //	Only code for the clone() method in AbsTree
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Stack;
@@ -31,35 +30,35 @@ class TreeGUIDriver {
 
 public class TreeGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
-	
+
 	TreeMemento tm = new TreeMemento();
 
 	AbsTree tree;
-		
+
 	boolean is_new_tree = true; // set to false after first insert
 
 	Choice tree_kind, element_kind;
-	
+
 	public static Font font = new Font("Comic Sans MS", Font.BOLD, 24);
 
-	JTextField input_elem_text, input_elem_text2, min_text, max_text; 
-	
-	JButton insertButton, deleteButton, undoButton; 
+	JTextField input_elem_text, input_elem_text2, min_text, max_text;
+
+	JButton insertButton, deleteButton, undoButton;
 	JButton minButton, maxButton, clearButton;
-	
-	JPanel inputPanel;  
-	OutputPanel outputPanel; 
+
+	JPanel inputPanel;
+	OutputPanel outputPanel;
 
 	public TreeGUI() {
-		
+
 		super("GUI for Tree Operations");
 		Label tree_kind_label;
 		JPanel input1, input2;
-		
-		//The JPanel input1 details follow
 
-		input1 = new JPanel(new FlowLayout());   //FlowLayout default
-		
+		// The JPanel input1 details follow
+
+		input1 = new JPanel(new FlowLayout()); // FlowLayout default
+
 		tree_kind_label = new Label("Tree Kind:");
 		tree_kind_label.setFont(font);
 		input1.add(tree_kind_label);
@@ -80,7 +79,7 @@ public class TreeGUI extends JFrame {
 		insertButton.setFont(font);
 		input1.add(insertButton);
 		input1.add(input_elem_text);
-		
+
 		input_elem_text2 = new JTextField("integer");
 		input_elem_text2.setFont(font);
 		input_elem_text2.requestFocus(true);
@@ -94,10 +93,10 @@ public class TreeGUI extends JFrame {
 		undoButton = new JButton("Undo");
 		undoButton.setFont(font);
 		input1.add(undoButton);
-		
-		//The JPanel input2 details follow
 
-		input2 = new JPanel(new FlowLayout());   //FlowLayout default
+		// The JPanel input2 details follow
+
+		input2 = new JPanel(new FlowLayout()); // FlowLayout default
 
 		minButton = new JButton("Minimum");
 		minButton.setFont(font);
@@ -118,18 +117,18 @@ public class TreeGUI extends JFrame {
 		clearButton = new JButton("Clear");
 		clearButton.setFont(font);
 		input2.add(clearButton);
-		
+
 		// The JPanels inputPanel and outputPanel details follow
-		
+
 		inputPanel = new JPanel(new BorderLayout());
 		outputPanel = new OutputPanel();
-		
+
 		inputPanel.add("North", input1);
 		inputPanel.add("South", input2);
-		
+
 		// Add Button Listeners here for:
 		// min, max, clear, insert, delete, undo
-		
+
 		minButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -140,7 +139,7 @@ public class TreeGUI extends JFrame {
 				min_text.setText(Integer.toString(tree.min().value));
 			}
 		});
-		
+
 		maxButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -151,7 +150,7 @@ public class TreeGUI extends JFrame {
 				max_text.setText(Integer.toString(tree.max().value));
 			}
 		});
-		
+
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -164,13 +163,13 @@ public class TreeGUI extends JFrame {
 				outputPanel.clearPanel();
 			}
 		});
-		
+
 		insertButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String s = input_elem_text.getText();
-				boolean b = false;  // whether insert changed state of tree
-				
+				boolean b = false; // whether insert changed state of tree
+
 				if (is_new_tree) {
 					try {
 						if (tree_kind.getSelectedIndex() == 0)
@@ -181,23 +180,22 @@ public class TreeGUI extends JFrame {
 						JOptionPane.showMessageDialog(null, "Bad integer: " + s + ". Please re-enter.");
 						return;
 					}
-	
+
 				} // end of if is_new_tree
 				else {
-			         try {
-			        	 if (tree == null) {
-			        		 if (tree_kind.getSelectedIndex() == 0)
-							 	tree = new Tree(Integer.parseInt(s));
-			        		 else
-							 	tree = new DupTree(Integer.parseInt(s));
-			        		 b = true;
-			        	 }
-			        	 else 
-			        		 b = tree.insert(Integer.parseInt(s)); 
-			         } catch (NumberFormatException e2) {
-							 	JOptionPane.showMessageDialog(null, "Bad integer: " + s + ". Please re-enter.");
-							 	return;
-						 }
+					try {
+						if (tree == null) {
+							if (tree_kind.getSelectedIndex() == 0)
+								tree = new Tree(Integer.parseInt(s));
+							else
+								tree = new DupTree(Integer.parseInt(s));
+							b = true;
+						} else
+							b = tree.insert(Integer.parseInt(s));
+					} catch (NumberFormatException e2) {
+						JOptionPane.showMessageDialog(null, "Bad integer: " + s + ". Please re-enter.");
+						return;
+					}
 				}
 				is_new_tree = false;
 				outputPanel.drawTree(tree);
@@ -219,36 +217,33 @@ public class TreeGUI extends JFrame {
 				if (is_new_tree || tree == null) {
 					JOptionPane.showMessageDialog(null, "Cannot delete from an empty tree.");
 					return;
-				}   
-				
-				boolean b = tree.delete(n); // note whether delete changed state of tree
-				
-				if (b)  {
-					 outputPanel.drawTree(tree);
 				}
-				else // delete will not remove the last value, hence must check this:
-					if (n == tree.value && tree.left==null && tree.right==null) {
-						tree = null; // 
-						outputPanel.clearPanel();
-					}
-					else {
-						JOptionPane.showMessageDialog(null, "Cannot delete non-existent value " + n);
-						outputPanel.drawTree(tree);
-					}
+
+				boolean b = tree.delete(n); // note whether delete changed state of tree
+
+				if (b) {
+					outputPanel.drawTree(tree);
+				} else // delete will not remove the last value, hence must check this:
+				if (n == tree.value && tree.left == null && tree.right == null) {
+					tree = null; //
+					outputPanel.clearPanel();
+				} else {
+					JOptionPane.showMessageDialog(null, "Cannot delete non-existent value " + n);
+					outputPanel.drawTree(tree);
+				}
 				input_elem_text2.selectAll();
 			}
 		});
-		
-		
+
 		undoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-			// missing code to be filled in by you
+				// missing code to be filled in by you
 
-			}	 
+			}
 		});
-		
+
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
 		add("North", inputPanel);
@@ -330,12 +325,12 @@ class TreeMemento {
 	public AbsTree get_state() {
 		// fill in code here
 	}
-	
+
 	public void clear() {
 		// fill in code here
 	}
-	
-	boolean is_empty() { 
+
+	boolean is_empty() {
 		// fill in code here
 	}
 }
@@ -353,7 +348,7 @@ abstract class AbsTree implements Cloneable {
 
 	public AbsTree clone() {
 
-		 // fill in code here
+		// fill in code here
 
 	}
 
@@ -366,7 +361,7 @@ abstract class AbsTree implements Cloneable {
 	}
 
 	public boolean insert(int n) {
-		if (value == n) 
+		if (value == n)
 			return count_duplicates();
 		else if (value < n) {
 			if (right == null)
@@ -374,12 +369,12 @@ abstract class AbsTree implements Cloneable {
 			else
 				return right.insert(n);
 			return true;
-		}
-		else { if (left == null) 
-			 	 left = add_node(n);
-			 else
-				 return left.insert(n);
-			 return true;
+		} else {
+			if (left == null)
+				left = add_node(n);
+			else
+				return left.insert(n);
+			return true;
 		}
 	}
 
